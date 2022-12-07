@@ -142,7 +142,7 @@ def scinews():
 
     nextarti = 0
     nextarti3 = 0
-    print("1. 다음 기사\n2. 해당 기사 브라우저로 열기\n3. 다른 플랫폼 기사 보기")
+    print("1. 다음 기사\n2. 해당 기사 브라우저로 열기\n3. 다른 플랫폼 기사 보기\n(종료 : -1)")
     while (nextarti<HMarticle-1):
         print("\n",ttitle[nextarti])
     
