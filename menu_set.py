@@ -4,11 +4,12 @@ from urllib.request import urlopen
 import cv2
 import numpy as np
 import webbrowser
+#import googletrans 오작동하여 패스.
 
-def tryint():
+def tryint(num):
     try : 
         a = int(input("번호 입력 : \n"))
-        if (1<=a<=4):
+        if (1<=a<=num):
             return a
         elif a== -1:
             return a
@@ -107,10 +108,73 @@ def nasa():
         cv2.imshow(imgtitle,image)
     else:
         print('종료')
+    
 
+def scinews():
+    urlsci = 'https://www.sci.news/archive'
+    urlnysci = 'https://www.nytimes.com/section/science'#현재 구현은 안됨.
+    urlDAsci = 'https://m.dongascience.com/news.php'#'https://www.dongascience.com/news.php'
+    
+    response = requests.get(urlsci)
+    np1 = response.text
+    '''
+    response = requests.get(urlnysci)
+    np2 = response.text
+    '''
+    response = requests.get(urlDAsci)
+    np3 = response.text
+    roughtitle = np1.split('<ul class="bjqs">')[1].split('<!-- end Basic jQuery Slider')[0]
+    #print(roughtitle)
+    roughtitle = roughtitle.split("<li>")
+    HMarticle = len(roughtitle)#8, 0은 빈값, 1~7까지에 값들이 있음.
+    tlink=[]
+    ttitle = []
+    for i in range(1,HMarticle):
+        rough = roughtitle[i].split('rel="bookmark">')
+       #print(rough[0][10:-2],"\n",rough[1].split('</a>')[0].strip())
+       tlink.append(rough[0][10:-2])
+       ttitle.append(rough[1].split('</a>')[0].strip())
+    tlink3 = []
+    ttitle3 = []
+    for i in range(1,11):
+        tlink3.append("https://m.dongascience.com/news.php?idx="+np3.split('news.php?idx=')[i].split('">')[0])
+        ttitle3.append(np3.split('<dt><div class="tit">')[i].split('</div>')[0])
+
+    nextarti = 0
+    nextarti3 = 0
+    print("1. 다음 기사\n2. 해당 기사 브라우저로 열기\n3. 다른 플랫폼 기사 보기")
+    while (nextarti<HMarticle-1):
+        print("\n",ttitle[nextarti])
+    
+        a = tryint()
+        if a==1:
+            nextarti+=1
+        elif a==2:
+            webbrowser.open(tlink[nextarti])
+        elif a==3:
+            nextarti = HMarticle+1
+        else:
+            nextarti = HMarticle+1
+            nextarti3 = 100
+    while (nextarti3<10):
+        print("\n",ttitle3[nextarti3])
+    
+        a = tryint()
+        if a==1:
+            nextarti3+=1
+        elif a==2:
+            webbrowser.open(tlink3[nextarti3])
+        elif a==3:
+            nextarti3 = 11
+        else:
+            nextarti3 = 11
+    
+    
+    
 def main():
-    print("1. 날씨\n2. 뉴스 키워드\n3. 이미지\n4. 게임\n(종료 : -1)\n")
-    a = tryint()
+    #print("1. 날씨\n2. 뉴스 키워드\n3. 이미지\n4. 게임\n(종료 : -1)\n")
+    print("1. 날씨\n2. 뉴스 키워드\n3. 이미지\n4. 과학 뉴스\n(종료 : -1)\n")
+    a = tryint(4)
 
     if a==1:
         #print("날씨")
@@ -121,7 +185,7 @@ def main():
     elif a==3:
         nasa()
     elif a==4:
-        print('게임')
+        #print('게임')
     else :
         return a
     print('\n')
