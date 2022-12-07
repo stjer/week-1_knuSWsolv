@@ -6,7 +6,7 @@ import numpy as np
 import webbrowser
 #import googletrans 오작동하여 패스.
 
-def tryint(num):
+def tryint(num=3):
     try : 
         a = int(input("번호 입력 : \n"))
         if (1<=a<=num):
